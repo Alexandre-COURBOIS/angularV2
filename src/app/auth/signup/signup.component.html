@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <h2>Créer un compte</h2>
+    <!--Je gère le formulaire signupForm qui a été créer dans signup.comp.ts-->
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email" class="form-control" formControlName="email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="Mot de passe" id="password" class="form-control" formControlName="password">
+      </div>
+      <div class="form-group">
+      <label for="passwordVerif">Vérifier votre mot de passe</label>
+      <input type="password" name="passwordVerif" id="passwordVerif" class="form-control" formControlName="passwordVerif">
+    </div>
+      <!--Si le formulaire n'est pas saisis de manière valide le bouton reste disabled-->
+      <button type="submit" class="btn btn-success" [disabled]="signupForm.invalid">Créer mon compte</button>
+    </form>
+    <p class="text-danger">{{errorMessage}}</p>
+  </div>
+</div>
