@@ -1,17 +1,18 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../services/auth.service';
+import {AuthService} from '../../../services/auth.service';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-signup',
-  templateUrl: './signup.component.html',
-  styles: []
+  selector: 'app-signin',
+  templateUrl: './signin.component.html',
+  styles: [
+  ]
 })
-export class SignupComponent implements OnInit {
+export class SigninComponent implements OnInit {
 
-  //FormGroup = permet de gérer tout les évenements d'un formulaire
-  signupForm !: FormGroup;
+  //signinForm = permet de gérer tout les évenements d'un formulaire
+  signinForm !: FormGroup;
   // Gestion du message d'erreur
   errorMessage !: String;
 
@@ -28,33 +29,31 @@ export class SignupComponent implements OnInit {
   //Cette methode initialise le formulaire
   initForm() {
     //Ici je génère le form group à l'aide du builder et je le store dans signUpForm
-    this.signupForm = this.formBuilder.group({
+    this.signinForm = this.formBuilder.group({
       // Les paramètres utilisateurs sont à placer ici (ceux présent dans le model) :
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.min(8)]],
-      passwordVerif: ['', [Validators.required, Validators.min(8)]]
+      password: ['', [Validators.required, Validators.min(8)]]
     });
   }
 
   //Cette methode soumet le formulaire
   onSubmit() {
-    if (this.signupForm.valid) {
-      if (this.signupForm.get('password')?.value === this.signupForm.get('passwordVerif')?.value) {
+    if (this.signinForm.valid) {
         //Je recupère la saisis de l'utilisateur
-        const email = this.signupForm.get('email')?.value;
-        const password = this.signupForm.get('password')?.value;
-        //Ici je passe le mail et le password saisis par l'user je peux utiliser .then car c'est une méthode Asynchrone et je redirige vers la route /books
-        this.authService.createNewUser(email, password).then(
+        const email = this.signinForm.get('email')?.value;
+        const password = this.signinForm.get('password')?.value;
+        /* Ici je passe le mail et le password saisis par l'user je peux utiliser .then car c'est une méthode Asynchrone (j'attends donc une réponse)
+          et je redirige vers la route /books */
+        this.authService.signInUser(email, password).then(
           () => {
-            this.router.navigate(['/auth/signin']);
+            this.router.navigate(['/books']);
+            sessionStorage.setItem('isLogged', "true");
+            sessionStorage.setItem('email', email);
           },
           (error) => {
             this.errorMessage = error;
           }
         );
-      } else {
-        this.errorMessage = "Vos mot de passe ne correspondent pas";
-      }
     } else {
       this.errorMessage = "Merci de renseigner correctement le formulaire";
     }
