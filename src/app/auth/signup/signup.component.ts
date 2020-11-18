@@ -46,7 +46,7 @@ export class SignupComponent implements OnInit {
         //Ici je passe le mail et le password saisis par l'user je peux utiliser .then car c'est une méthode Asynchrone et je redirige vers la route /books
         this.authService.createNewUser(email, password).then(
           () => {
-            this.router.navigate(['/books']);
+            this.router.navigate(['/auth/signin']);
           },
           (error) => {
             this.errorMessage = error;

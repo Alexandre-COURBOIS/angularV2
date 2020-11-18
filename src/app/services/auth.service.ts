@@ -46,6 +46,8 @@ export class AuthService {
   //Creation d'une methode executant la deconnxion ici ce n'est pas une promise car elle s'effectue sans attente de retour (sans requêtes)
   signOutUser() {
     firebase.auth().signOut();
+    sessionStorage.setItem('isLogged','false');
+    sessionStorage.clear();
   }
 
 }

@@ -2,12 +2,14 @@
   <div class="container-fluid">
     <ul class="nav navbar-nav">
       <li routerLinkActive="active">
-        <a routerLink="books">Livres</a>
+        <a *ngIf="isAuth" routerLink="books">Livres</a>
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li routerLinkActive="active"><a  routerLink="auth/signup">Créer un compte</a></li>
-      <li routerLinkActive="active"><a routerLink="auth/signin">Connexion</a></li>
+      <!--Via ngif je vérifie la variable qui m'indique si l'user est connecté où non pour afficher en fonction de ça mes boutons-->
+      <li routerLinkActive="active" *ngIf="!isAuth"><a routerLink="auth/signup">Créer un compte</a></li>
+      <li routerLinkActive="active" *ngIf="!isAuth"><a routerLink="auth/signin">Connexion</a></li>
+      <li routerLinkActive="active" *ngIf="isAuth"><a routerLink="auth/signin" (click)="onsignOut()">Deconnexion</a></li>
     </ul>
   </div>
 </nav>

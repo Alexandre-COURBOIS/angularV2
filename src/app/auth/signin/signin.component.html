@@ -1,1 +1,19 @@
-<p>signin works!</p>
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <h2>Connexion</h2>
+    <!--Je gère le formulaire signupForm qui a été créer dans signup.comp.ts-->
+    <form [formGroup]="signinForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email" class="form-control" formControlName="email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="Mot de passe" id="password" class="form-control" formControlName="password">
+      </div>
+      <!--Si le formulaire n'est pas saisis de manière valide le bouton reste disabled-->
+      <button type="submit" class="btn btn-success" [disabled]="signinForm.invalid">Se connecter</button>
+    </form>
+    <p class="text-danger">{{errorMessage}}</p>
+  </div>
+</div>
