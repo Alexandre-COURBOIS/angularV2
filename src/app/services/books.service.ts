@@ -31,24 +31,78 @@ export class BooksService {
   getBooks() {
     /* Iici on récupère les books donc leur value (nommé ici data emise sous forme de Snapshot) que je stock dans this.books si il y a une data.val, sinon je retourne
     mon tableau de books vide originel (Permet d'éviter les bugs si la table est vide où ne retourne rien') */
-    firebase.database().ref('/books').on('value',(data) => {
+    firebase.database().ref('/books').on('value', (data) => {
       this.books = data.val() ? data.val() : [];
       this.emitBooks();
     });
   }
 
-  //Retourne un seul livre de la badd, prend donc en paramètre l'id du livre en question
+  //Retourne un seul livre de la bdd, prend donc en paramètre l'id du livre en question
   getOneBook(id: number) {
-  return new Promise(
-    ((resolve, reject) => {
-      firebase.database().ref('books/'+id).once('value').then(
-        (data) => {
-          resolve(data.val());
-        }, (error) => {
-          reject(error);
+    return new Promise(
+      ((resolve, reject) => {
+        firebase.database().ref('books/' + id).once('value').then(
+          (data) => {
+            resolve(data.val());
+          }, (error) => {
+            reject(error);
+          }
+        );
+      })
+    );
+  }
+
+  //Créer un nouveau livre
+  createNewBook(newBook: Book) {
+    this.books.push(newBook);
+    this.saveBooks();
+    this.emitBooks();
+  }
+
+  // Supprimer un livre
+  removeBook(book: Book) {
+    const bookIndexToRemove = this.books.findIndex(
+      // @ts-ignore
+      (bookEl) => {
+        if (bookEl === book) {
+          return true;
         }
-      )
-    })
-  )
+      }
+    );
+    this.books.splice(bookIndexToRemove, 1);
+    this.saveBooks();
+    this.emitBooks();
+  }
+
+  //Upload de fichiers
+  uploadFile(file: File) {
+    return new Promise(
+      ((resolve, reject) => {
+        let res1 = Math.floor(Math.random() * 1000) + 1;
+        let res2 = Math.floor(Math.random() * 500) + 1;
+        let total = res1 + res2;
+        const uniqueFileName = Date.now().toString() + total;
+        // ref() sans arguments renvoit à la racine du stockage
+        const upload = firebase.storage().ref().child('images/' + uniqueFileName + file.name).put(file);
+        //Ici je réagis à chaque changement d'état du téléchargement
+        upload.on(firebase.storage.TaskEvent.STATE_CHANGED,
+          (snapshot) => {
+            console.log('chargement...');
+          },
+          (error) => {
+            console.log('Erreur de chargement : ' + error);
+            reject();
+          },
+          () => {
+            resolve(upload.snapshot.ref.getDownloadURL().then(
+              (downloadUrl) => {
+                console.log('Upload successful ! ('+downloadUrl+')');
+                resolve(downloadUrl);
+              }
+            ));
+          }
+        );
+      })
+    );
   }
 }

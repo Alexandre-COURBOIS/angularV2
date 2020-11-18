@@ -14,6 +14,7 @@ import {AuthGuardService} from './services/auth-guard.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { Page404Component } from './pages/page404/page404.component';
+import {SingleBookComponent} from './pages/book-list/single-book/single-book.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { Page404Component } from './pages/page404/page404.component';
     SigninComponent,
     BookListComponent,
     BookFormComponent,
+    SingleBookComponent,
     HeaderComponent,
     Page404Component
   ],
